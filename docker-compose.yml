@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  php:
+    container_name: todo_ajax-php
+    volumes:
+      - ./php/php.ini:/usr/local/etc/php/php.ini
+      - ./html:/var/www/html
+    ports:
+      - 8080:80
+    build: ./php
+    image: todo_ajax_img-php
+  mysql:
+    container_name: todo_ajax-db
+    build: ./mysql
+    image: todo_ajax_img-db # イメージの名前
+    volumes:
+      - db-data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=test
+      - MYSQL_USER=test
+      - MYSQL_PASSWORD=test
+  phpmyadmin:
+    container_name: todo_ajax-phpmyadmin
+    image: phpmyadmin/phpmyadmin
+    environment:
+      - PMA_ARBITRARY=1
+      - PMA_HOST=mysql
+      - PMA_USER=test
+      - PMA_PASSWORD=test
+    ports:
+      - 4040:80
+    volumes:
+      - ./phpmyadmin/sessions:/sessions
+
+volumes:
+  db-data:
