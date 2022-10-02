@@ -1,6 +1,4 @@
-
-
-input[type="checkbox"]:checked + span {
+input[type="checkbox"]:checked + a {
   background:
   linear-gradient(to top left,
       rgba(0,0,0,0) 0%,

@@ -32,20 +32,6 @@ $todos = $todo->getAll();
   <title>todo</title>
 </head>
 <body>
-
-    <!-- <div class="ope-container">
-      <span class="delete">delete</span>
-      <span class="upChange">up↑</span>
-      <span class="topChange">topChange</span>
-      <span class="downChange">down↓</span>
-      <span class="bottomChange">bottomChange</span>
-      <span class="textChange">textChange</span>
-    </div>
-    <form class="invisible-container">
-      <textarea cols="17" rows="4" name="title"></textarea>
-      <input type="submit" value="submit">
-    </form> -->
-
   <main data-token="<?= Utils::h($_SESSION['token']) ;?>">
     <h1>TODO</h1>
     <span class="purge">purge</span>
@@ -58,7 +44,7 @@ $todos = $todo->getAll();
       <li data-id="<?= Utils::h($todo->id); ?>">
         <div class="title-container">
             <input type="checkbox" <?= $todo->is_done ? 'checked' : ''?>>
-            <span class="title"><?= $todo->title;?></span>
+            <a href="./single.php/<?= Utils::h($todo->id);?>" class="title"><?= $todo->title;?></a>
         </div>
         <div class="ope-container">
           <span class="delete">delete</span>
