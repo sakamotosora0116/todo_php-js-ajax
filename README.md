@@ -1,5 +1,15 @@
 codeみてておもったんだけど todo.php のupchange もっと短くかけるな。
 
+ $clickTarget = $stm1->fetch(\PDO::FETCH_COLUMN);
+
+    $stm2 = $this->pdo->prepare("SELECT min(pos) FROM todos WHERE pos > (SELECT pos FROM todos WHERE id = :id)");
+    
+    を
+    
+    $stm2 = $this->pdo->prepare("SELECT min(pos) FROM todos WHERE pos > $clickTarget");
+    
+    
+
 
 When I was reading Todo.php code, I wonder 
 
