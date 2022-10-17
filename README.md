@@ -1,3 +1,9 @@
+codeみてておもったんだけど todo.php のupchange もっと短くかけるな。
+
+
+When I was reading Todo.php code, I wonder 
+
+
 開発状況
 
     if (e.target.parentNode.classList.contains('visible'))
