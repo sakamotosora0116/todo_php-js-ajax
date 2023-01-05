@@ -17,8 +17,10 @@ $pdo = Database::getInstance();
 
 $todo = new Todo($pdo);
 
-$pageNum = $_GET['']
+$pageNum = $_GET['id'];
 
-echo 'a';
+echo intval($pageNum);
+
+
 
 ?>

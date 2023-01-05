@@ -1,6 +1,15 @@
 at first You need to create a todo table because I implement auto-create-tabel setting in docker-compose.yml.
 
-todo1. to enable type hinting, upgrade php version.
+
+*tasks that I must work on if I have time.
+1. to enable type hinting, upgrade php version.
+
+2 write test codes.
+
+3 When attaching a db container, log in mysql and use a db automatically.
+
+4 if a title is null, exit *add func* process.
+
 
 
 *table structure
@@ -9,7 +18,9 @@ refer to main.sql
 
 *list session key
 
-session.txt参照（まだ未実装）
+refer to session.txt(It is still unimplemented）
+
+---------------------------------------------------
 
 codeみてておもったんだけど todo.php のupchange もっと短くかけるな。
 

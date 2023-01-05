@@ -12,68 +12,87 @@ class Todo
         Token::create();
     }
 
+    /**
+     * 
+     * @param void
+     */
     public function processPost()
     {
+
         $action = filter_input(INPUT_GET, 'action');
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST')
         {
-        Token::validate();
-        switch ($action) {
-            case 'add':
-                $id = $this->add();
-                header('Content-Type: application/json');
-                echo json_encode(['id' => $id]);
+            Token::validate();
+            switch ($action) {
+                case 'add':
+                    $id = $this->add();
+                    header('Content-Type: application/json');
+                    echo json_encode(['id' => $id]);
+                    break;
+                case 'delete':
+                    $this->delete();
+                    break;
+                case 'toggle':
+                    $isDone = $this->toggle();
+                    header('Content-type: application/json');
+                    echo json_encode(['is_done' => $isDone]);
+                    break;
+                case 'downChange':
+                    $this->downChange();
+                    break;
+                case 'bottomChange':
+                $this->bottomChange();
                 break;
-            case 'delete':
-                $this->delete();
+                case 'upChange':
+                $this->upChange();
                 break;
-            case 'toggle':
-                $isDone = $this->toggle();
-                header('Content-type: application/json');
-                echo json_encode(['is_done' => $isDone]);
+                case 'topChange':
+                $this->topChange();
                 break;
-            case 'downChange':
-            $this->downChange();
-            break;
-            case 'bottomChange':
-            $this->bottomChange();
-            break;
-            case 'upChange':
-            $this->upChange();
-            break;
-            case 'topChange':
-            $this->topChange();
-            break;
-            case 'textChange':
-            $this->textChange();
-            break;
-            case 'purge':
-            $this->purge();
-            break;
-            default:
-            exit;
-        }
+                case 'textChange':
+                $this->textChange();
+                break;
+                case 'purge':
+                    $this->purge();
+                    break;
+                default:
+                    exit;
+            }
+
             exit;
         }
     }
 
     /**
-     * add todo
+     * add a title and a content to db
      * @param void
      * @return int $lastId
      */
     private function add()
     {
         $title = filter_input(INPUT_POST, 'title');
-        $stmt1 = $this->pdo->prepare("INSERT INTO todos (title) VALUES (:title)");
-        $stmt1->bindValue('title', $title);
-        $stmt1->execute();
+        $content = filter_input(INPUT_POST, 'content');
 
+        // if (is_null($title))
+        // {
+
+        // }
+        $stmt = $this->pdo->prepare("INSERT INTO todos (title, content) VALUES ((:title), (:content)");
+        $stmt->bindValue('title', $title);
+        $stmt->bindValue('content', $content);
+
+        $stmt->execute();
+
+        // $stmt = $this->pdo->prepare("INSERT INTO todos (content) VALUES (:content)");
+        // $stmt->execute();
+
+        // If we perform an INSERT or UPDATE on a table with an AUTO_INCREMENT field, 
+        // we can get the ID of the last inserted/updated record immediately.
         $lastId = (int) $this->pdo->lastInsertId();
 
-        $stmt2 = $this->pdo->prepare("UPDATE todos SET pos = id +100 WHERE title = :title");
-        $stmt2->bindValue('title', $title);
+        $stmt2 = $this->pdo->prepare("UPDATE todos SET pos = id +100 WHERE id = :id");
+        $stmt2->bindValue('id', $lastId);
         $stmt2->execute();
 
         return $lastId;
