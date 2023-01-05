@@ -3,7 +3,7 @@ create table todos (
     title varchar(255),
     content varchar(255),
     pos int,
-    is_done boolean,
+    is_done boolean DEFAULT false,
     PRIMARY KEY (id),
     UNIQUE (pos)
 )

@@ -78,14 +78,13 @@ class Todo
         // {
 
         // }
-        $stmt = $this->pdo->prepare("INSERT INTO todos (title, content) VALUES ((:title), (:content)");
-        $stmt->bindValue('title', $title);
-        $stmt->bindValue('content', $content);
+
+        $stmt = $this->pdo->prepare("INSERT INTO todos (title, content) VALUES (:title, :content)");
+        $stmt->bindValue(':title', $title);
+        $stmt->bindValue(':content', $content);
 
         $stmt->execute();
 
-        // $stmt = $this->pdo->prepare("INSERT INTO todos (content) VALUES (:content)");
-        // $stmt->execute();
 
         // If we perform an INSERT or UPDATE on a table with an AUTO_INCREMENT field, 
         // we can get the ID of the last inserted/updated record immediately.
@@ -128,15 +127,15 @@ class Todo
         $stmt1->bindValue('id', $id, \PDO::PARAM_INT);
         $stmt1->execute();
         $todo = $stmt1->fetch();
+
         if (empty($todo)) {
-        header('HTTP', true, 404);
-        exit;
+            header('HTTP', true, 404);
+            exit;
         }
 
         $stmt2 = $this->pdo->prepare("UPDATE todos SET is_done = NOT is_done WHERE id = :id");
         $stmt2->bindValue('id', $id, \PDO::PARAM_INT);
         $stmt2->execute();
-
 
         return (boolean) !$todo->is_done;
     }
@@ -174,71 +173,69 @@ class Todo
         $stm3->bindValue('changeTarget', $changeTarget, \PDO::PARAM_INT);
         $stm3->bindValue('id', $id, \PDO::PARAM_INT);
         $stm3->execute();
+    }
+
+    /**
+     * replace a task with a one that is under it.
+     * @param void
+     * @return void
+     */
+    private function bottomChange()
+    {
+        $id = filter_input(INPUT_POST, 'id');
+
+        $stm1 = $this->pdo->prepare("SELECT pos FROM todos WHERE id = :id");
+        $stm1->bindValue('id', $id, \PDO::PARAM_INT);
+        $stm1->execute();
+
+        $clickTarget = $stm1->fetch(\PDO::FETCH_COLUMN);
+
+        $stm2 = $this->pdo->query("SELECT min(pos) -1 FROM todos");
+        $changeTarget = $stm2->fetch(\PDO::FETCH_COLUMN);
+
+        if ($clickTarget - 1 == $changeTarget) {
+        return;
+        }
+
+        $stm4 = $this->pdo->prepare("UPDATE todos SET pos = :changeTarget WHERE id = :id");
+        $stm4->bindValue('id', $id, \PDO::PARAM_INT);
+        $stm4->bindValue('changeTarget', $changeTarget, \PDO::PARAM_INT);
+        $stm4->execute();
+    }
+
+
+    /**
+     * 
+     */
+    private function upChange()
+    {
+        $id = filter_input(INPUT_POST, 'id');
+
+        $stm1 = $this->pdo->prepare("SELECT pos FROM todos WHERE id = :id");
+        $stm1->bindValue('id', $id, \PDO::PARAM_INT);
+        $stm1->execute();
+
+        $clickTarget = $stm1->fetch(\PDO::FETCH_COLUMN);
+
+        $stm2 = $this->pdo->prepare("SELECT min(pos) FROM todos WHERE pos > (SELECT pos FROM todos WHERE id = :id)");
+        $stm2->bindValue('id', $id, \PDO::PARAM_INT);
+        $stm2->execute();
+        $changeTarget = $stm2->fetch(\PDO::FETCH_COLUMN);
+
+        if ($changeTarget == null) {
+        return;
+        }
+
+        $stm5 = $this->pdo->prepare("UPDATE todos SET pos = $clickTarget WHERE pos = :changeTarget");
+        $stm5->bindValue('changeTarget', $changeTarget, \PDO::PARAM_INT);
+        $stm5->execute();
+
+        $stm4 = $this->pdo->prepare("UPDATE todos SET pos = $changeTarget WHERE id = :id");
+        $stm4->bindValue('id', $id, \PDO::PARAM_INT);
+        $stm4->execute();
 
 
     }
-
-  /**
-   * replace a task with a one that is under it.
-   * @param void
-   * @return void
-   */
-  private function bottomChange()
-  {
-    $id = filter_input(INPUT_POST, 'id');
-
-    $stm1 = $this->pdo->prepare("SELECT pos FROM todos WHERE id = :id");
-    $stm1->bindValue('id', $id, \PDO::PARAM_INT);
-    $stm1->execute();
-
-    $clickTarget = $stm1->fetch(\PDO::FETCH_COLUMN);
-
-    $stm2 = $this->pdo->query("SELECT min(pos) -1 FROM todos");
-    $changeTarget = $stm2->fetch(\PDO::FETCH_COLUMN);
-
-    if ($clickTarget - 1 == $changeTarget) {
-      return;
-    }
-
-    $stm4 = $this->pdo->prepare("UPDATE todos SET pos = :changeTarget WHERE id = :id");
-    $stm4->bindValue('id', $id, \PDO::PARAM_INT);
-    $stm4->bindValue('changeTarget', $changeTarget, \PDO::PARAM_INT);
-    $stm4->execute();
-  }
-
-
-  /**
-   * 
-   */
-  private function upChange()
-  {
-    $id = filter_input(INPUT_POST, 'id');
-
-    $stm1 = $this->pdo->prepare("SELECT pos FROM todos WHERE id = :id");
-    $stm1->bindValue('id', $id, \PDO::PARAM_INT);
-    $stm1->execute();
-
-    $clickTarget = $stm1->fetch(\PDO::FETCH_COLUMN);
-
-    $stm2 = $this->pdo->prepare("SELECT min(pos) FROM todos WHERE pos > (SELECT pos FROM todos WHERE id = :id)");
-    $stm2->bindValue('id', $id, \PDO::PARAM_INT);
-    $stm2->execute();
-    $changeTarget = $stm2->fetch(\PDO::FETCH_COLUMN);
-
-    if ($changeTarget == null) {
-      return;
-    }
-
-    $stm5 = $this->pdo->prepare("UPDATE todos SET pos = $clickTarget WHERE pos = :changeTarget");
-    $stm5->bindValue('changeTarget', $changeTarget, \PDO::PARAM_INT);
-    $stm5->execute();
-
-    $stm4 = $this->pdo->prepare("UPDATE todos SET pos = $changeTarget WHERE id = :id");
-    $stm4->bindValue('id', $id, \PDO::PARAM_INT);
-    $stm4->execute();
-
-
-  }
 
     /**
      * replace a task with a one that is under it.

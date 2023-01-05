@@ -29,10 +29,13 @@
         checkbox.type = 'checkbox'
 
 
-        const title = document.createElement('span');
-        title.textContent = titleValue;
+        const title = document.createElement('a')
+        title.textContent = titleValue
 
-        const deleteSpan = document.createElement('span');
+        const url = (`./single.php?id=${id}`)
+        title.setAttribute("href", url)
+
+        const deleteSpan = document.createElement('span')
         deleteSpan.textContent = 'delete';
         deleteSpan.classList.add('delete');
 
@@ -115,6 +118,8 @@
             })
 
             .then(json => {
+                // exception process
+                // 
                 if(json.is_done !== e.target.checked) {
                     alert('This todo has been updated. UI is being updated');
                     e.target.checked = json.is_done;
@@ -248,10 +253,13 @@
   /* add a task to ul */
 
     document.querySelector('.add-form').addEventListener('submit', e => {
-        e.preventDefault();
+        e.preventDefault()
+
 
         const title = input_title.value;
         const content = textarea_content.value;
+        console.log(content)
+
 
         fetch('?action=add', {
         method: 'POST',
@@ -270,7 +278,8 @@
             addTodo(json.id, title);
         });
 
-        input_title.value = '';
+        input_title.value = ''
+        textarea_content.value = ''
         input_title.focus();
     })
 
