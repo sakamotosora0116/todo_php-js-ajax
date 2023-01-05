@@ -1,8 +1,13 @@
-テーブル構成
+at first You need to create a todo table because I implement auto-create-tabel setting in docker-compose.yml.
 
-main.sql参照
+todo1. to enable type hinting, upgrade php version.
 
-セッション一覧
+
+*table structure
+
+refer to main.sql
+
+*list session key
 
 session.txt参照（まだ未実装）
 
