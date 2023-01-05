@@ -1,3 +1,11 @@
+テーブル構成
+
+main.sql参照
+
+セッション一覧
+
+session.txt参照（まだ未実装）
+
 codeみてておもったんだけど todo.php のupchange もっと短くかけるな。
 
  $clickTarget = $stm1->fetch(\PDO::FETCH_COLUMN);
