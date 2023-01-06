@@ -1,7 +1,5 @@
 <?php
 
-
-
 require_once('./MyApp/config.php');
 require_once('./MyApp/Database.php');
 require_once('./MyApp/Todo.php');
@@ -17,9 +15,9 @@ $pdo = Database::getInstance();
 
 $todo = new Todo($pdo);
 
-$pageNum = $_GET['id'];
+$pageNum = (int) $_GET['id'];
 
-echo intval($pageNum);
+echo $pageNum;
 
 
 

@@ -13,7 +13,8 @@ class Todo
     }
 
     /**
-     * 
+     * リクエスト処理をaddかdeleteか。。。。にふりわける。
+     * そしてそのメソッドを実行する
      * @param void
      */
     public function processPost()
@@ -265,16 +266,19 @@ class Todo
         $stm4->execute();
     }
 
-  private function textChange()
-  {
-    $id = filter_input(INPUT_POST, 'id');
-    $title = filter_input(INPUT_POST, 'title');
+    /**
+     * change a title
+     */
+    private function textChange()
+    {
+        $id = filter_input(INPUT_POST, 'id');
+        $title = filter_input(INPUT_POST, 'title');
 
-    $stmt = $this->pdo->prepare("UPDATE todos SET title = :title WHERE id = :id");
-    $stmt->bindValue('id', $id, \PDO::PARAM_INT);
-    $stmt->bindValue('title', $title);
-    $stmt->execute();
-  }
+        $stmt = $this->pdo->prepare("UPDATE todos SET title = :title WHERE id = :id");
+        $stmt->bindValue('id', $id, \PDO::PARAM_INT);
+        $stmt->bindValue('title', $title);
+        $stmt->execute();
+    }
 
     /**
      * replace a task with a one that is under it.
@@ -287,15 +291,39 @@ class Todo
     }
 
     /**
-     * replace a task with a one that is under it.
+     * get all data from db.
      * @param void
-     * @return void
+     * @return array<array<>> $todos
     */
     public function getAll()
     {
         $stmt = $this->pdo->query("SELECT * FROM todos ORDER BY pos DESC");
         $todos = $stmt->fetchAll();
         return $todos;
+    }
+
+    /**
+     * get a content from db.
+     * @param void
+     * @return 
+     */
+    public function getContent()
+    {
+        $stmt = $this->pdo->prepare("SELECT content FROM todos Where id = :id");
+        $stmt->bindValue('id', $id, \PDO::PARAM_INT);
+        $content = $stmt->fetch();
+        return $todos;
+    }
+
+    /**
+     * @param
+     * @return int $count
+     */
+    public function countTodo()
+    {
+        $stmt = $this->pdo->query("SELECT count(*) FROM todos");
+        $count = $stmt->fetchColumn();
+        return $count;
     }
 }
 

@@ -180,17 +180,17 @@
 
     if (e.target.classList.contains('downChange')) {
         fetch('?action=downChange', {
-        method: 'POST',
-        body: new URLSearchParams({
-            id: e.target.parentNode.parentNode.dataset.id,
-            token: token,
-        })
+            method: 'POST',
+            body: new URLSearchParams({
+                id: e.target.parentNode.parentNode.dataset.id,
+                token: token,
+            })
         });
         const postTarget = e.target.parentNode.parentNode.nextElementSibling;
         const moveTarget = e.target.parentNode.parentNode;
 
         if (moveTarget !== ul.lastElementChild) {
-        ul.insertBefore(postTarget, moveTarget);
+            ul.insertBefore(postTarget, moveTarget);
         }
     }
 

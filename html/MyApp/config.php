@@ -6,6 +6,8 @@
   define('DB_USER', 'test');
   define('DB_PASS', 'test');
 
+  define('per_page', 3);
+
   // spl_autoload_register(function($class) {
   //   $prefix = "MyApp\\";
   //   $preFileName = trim($class, $prefix);
