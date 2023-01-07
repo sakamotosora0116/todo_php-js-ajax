@@ -4,7 +4,7 @@ input[type="checkbox"]:checked + a {
       rgba(0,0,0,0) 0%,
       rgba(0,0,0,0) calc(50% - 0.8px),
       rgba(0,0,0,1) 50%,
-      rgba(0,0,0,0) calc(50% + 0.8px),
+      rgba(75, 22, 22, 0) calc(50% + 0.8px),
       rgba(0,0,0,0) 100%),
   linear-gradient(to top right,
       rgba(0,0,0,0) 0%,
@@ -12,6 +12,10 @@ input[type="checkbox"]:checked + a {
       rgba(0,0,0,1) 50%,
       rgba(0,0,0,0) calc(50% + 0.8px),
       rgba(0,0,0,0) 100%);
+}
+
+a {
+    color: black;
 }
 
 ul {
@@ -57,6 +61,7 @@ li {
   border: 1.4px solid #585867;
 }
 
-.page_num {
-  border: solid;
+
+.now-page {
+  color: red !important;
 }

@@ -16,8 +16,7 @@ $pdo = Database::getInstance();
 $todo = new Todo($pdo);
 
 $todo->processPost();
-$todos = $todo->getAll();
-
+// $todos = $todo->getAll();
 
 $page_count = $todo->countTodo();
 
@@ -30,22 +29,22 @@ function calc_ttl_page(int $page_count)
 {
     // constant is defined at config.php
     $ttl_page = (int) ceil($page_count / per_page);
+
+    // todoが一つもないと、$ttl_pageは0になるので
+    if ($ttl_page === 0)
+    {
+        $ttl_page = 1;
+    }
     return $ttl_page;
 }
 
-function pagination($page_count, $now_page = 1)
-{
+// function pagination($page_count, $now_page = 1)
+// {}
+
+// pagination($page_count);
 
 
 
-}
-
-pagination($page_count);
-
-echo nl2br("\n");
-echo "page count: " . $page_count;
-
-$ttl_page = calc_ttl_page($page_count);
 
 if (!isset($_GET['id']))
 {
@@ -54,21 +53,50 @@ if (!isset($_GET['id']))
     $now_page = (int) $_GET['id'];
 }
 
+$ttl_page = calc_ttl_page($page_count);
+
+if ((int) $_GET['id'] > $ttl_page)
+{
+    // header('Location: localhost:8080/index.php?id=1');
+    header('Location: index.php?id=1');
+    exit();
+}
+
+// 現在のページが1のとき、①（現在のページ）が先頭にくるようにする
+$prev_page = $now_page === 1 ? null : max($now_page - 1, 1); 
+
+// 現在のページがページの最後のとき、ページネーションを3つ表示させる
+$two_prev_page = $now_page == $ttl_page ? $now_page - 2 : null;
+
+// 現在のページがページの最後のとき、そのページが最後尾にくるようにする。
+$next_page = $now_page === $ttl_page ? null : min($now_page + 1, $ttl_page); 
+
+// 現在ページが1のときもページネーションを3つ表示させる
+$two_next_page = $now_page == 1 ? 3: null;
+
+$offset = ($now_page - 1) * 3;
+echo nl2br("\n");
+
+echo "offset is " . $offset;
+
+$todos = $todo->getTodoPerPage($offset);
+echo nl2br("\n");
+
+var_dump($todos);
+
+echo nl2br("\n");
+echo "page count: " . $page_count;
+
 echo nl2br("\n");
 echo "now_page:" . $now_page;
 echo nl2br("\n");
 echo gettype($now_page);
 echo nl2br("\n");
 echo "ttl_page" . $ttl_page;
+echo nl2br("\n");
 echo gettype($ttl_page);
 
-// 現在のページが1のとき、①（現在のページ）が先頭にくるようにする
-$prev_page = $now_page === 1 ? null : max($now_page - 1, 1); 
 
-// 現在のページがページの最後のとき、そのページが最後尾にくるようにする。
-$next_page = $now_page === $ttl_page ? null : min($now_page + 1, $ttl_page); 
-
-$offset = ($now_page - 1) * 2;
 
 ?>
 
@@ -114,12 +142,15 @@ $offset = ($now_page - 1) * 2;
         </ul>
 
         <div class="pagination">
+            <!-- 現在ページ -->
             <?php if ($now_page != 1): ?>
                 <a href="index.php?id=<?= $prev_page ?>"><button>prev</button></a>
             <?php endif; ?>
+            <a class="two_prev_page" href="index.php?id=<?= $two_prev_page ?>"><?= $two_prev_page ?></a>
             <a class="prev_page" href="index.php?id=<?= $prev_page ?>"><?= $prev_page ?></a>
-            <a class="now_page" href="index.php?id=<?= $now_page ?>"><?= $now_page ?></a>
+            <a class="now-page" href="index.php?id=<?= $now_page ?>"><?= $now_page ?></a>
             <a class="next_page" href="index.php?id=<?= $next_page ?>"><?= $next_page ?></a>
+            <a class="two_next_page" href="index.php?id=<?= $two_next_page ?>"><?= $two_next_page ?></a>
             <?php if ($now_page < $ttl_page): ?>
                 <a href="index.php?id=<?= $next_page ?>"><button>next</button></a>
             <?php endif; ?>

@@ -303,16 +303,35 @@ class Todo
     }
 
     /**
+     * 
+     * @param int $offset
+     * @return object $todos
+     */
+    public function getTodoPerPage($offset)
+    {
+        // $stmt = $this->pdo->prepare("SELECT * FROM (SELECT FROM todos ORDER BY pos DESC) AS subquery LIMIT 3 OFFSET :offset");
+        // $stmt = $this->pdo->query("SELECT * FROM todos ORDER BY pos DESC LIMIT 3 OFFSET 2");
+        $stmt = $this->pdo->prepare("SELECT * FROM todos ORDER BY pos DESC LIMIT 3 OFFSET :offset");
+        // $stmt = $this->pdo->prepare("SELECT * FROM todos");
+
+        $stmt->bindValue('offset', $offset, \PDO::PARAM_INT);
+        $stmt->execute();
+        $todos = $stmt->fetchAll();
+        return $todos;
+
+    }
+
+    /**
      * get a content from db.
      * @param void
-     * @return 
+     * @return object $todos
      */
     public function getContent()
     {
         $stmt = $this->pdo->prepare("SELECT content FROM todos Where id = :id");
         $stmt->bindValue('id', $id, \PDO::PARAM_INT);
         $content = $stmt->fetch();
-        return $todos;
+        return $content;
     }
 
     /**
