@@ -146,6 +146,8 @@ echo gettype($ttl_page);
             <?php if ($now_page != 1): ?>
                 <a href="index.php?id=<?= $prev_page ?>"><button>prev</button></a>
             <?php endif; ?>
+            
+            <!-- pagenation -->
             <a class="two_prev_page" href="index.php?id=<?= $two_prev_page ?>"><?= $two_prev_page ?></a>
             <a class="prev_page" href="index.php?id=<?= $prev_page ?>"><?= $prev_page ?></a>
             <a class="now-page" href="index.php?id=<?= $now_page ?>"><?= $now_page ?></a>
